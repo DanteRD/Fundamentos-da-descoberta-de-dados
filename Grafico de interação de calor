@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.io as pio
+
+# FORÇA o Plotly a abrir no navegador
+pio.renderers.default = 'browser'
+
+# Gerando os dados
+idades = np.random.randint(20, 60, 20)
+salarios = idades * np.random.randint(80, 120, 20)
+pontuacoes = salarios * np.random.uniform(0.5, 1.5, 20)
+
+profissoes = [
+    'Engenheiro', 'Professor', 'Médico', 'Advogado',
+    'Designer', 'Analista', 'Gerente', 'Programador'
+]
+
+estado_civil = ['Casado', 'Solteiro']
+
+# Criando o DataFrame
+df = pd.DataFrame({
+    'Idade': idades,
+    'Salário': salarios,
+    'Pontuação': pontuacoes.round(2),
+    'Profissão': np.random.choice(profissoes, size=20),
+    'Estado Civil': np.random.choice(estado_civil, size=20)
+})
+
+df.head(10)
+
+# Agrupando salários por profissão
+salario_por_profissao = df.groupby('Profissão')['Salário'].mean().reset_index()
+
+# Criando o gráfico
+fig = px.bar(
+    salario_por_profissao,
+    x='Salário',
+    y='Profissão',
+    orientation='h',
+    title='Salários por Profissão',
+    labels={'Salário': 'Salário Médio', 'Profissão': 'Profissão'},
+    color='Salário',
+    width=800
+)
+
+# Abre o gráfico na WEB
+fig.show()
