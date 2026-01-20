@@ -1,0 +1,69 @@
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.io as pio
+
+# Força o Plotly a abrir no navegador
+pio.renderers.default = 'browser'
+
+# ===============================
+# Criando nosso DataFrame
+# ===============================
+
+# Gerando 20 idades aleatórias entre 20 e 90 anos
+idades = np.random.randint(20, 90, 20)
+
+# Gerando salários relacionados à idade
+salarios = idades * np.random.randint(40, 80, 20)
+
+# Gerando pontuações relacionadas ao salário
+pontuacoes = salarios * np.random.uniform(0.5, 1.5, 20)
+
+# Lista de profissões possíveis
+profissoes = [
+    'Engenheiro', 'Professor', 'Médico', 'Advogado',
+    'Designer', 'Analista', 'Gerente', 'Programador'
+]
+
+# Lista de estado civil
+estado_civil = ['Casado', 'Solteiro']
+
+# ===============================
+# Criando o DataFrame
+# ===============================
+
+df = pd.DataFrame({
+    'Idade': idades,
+    'Salário': salarios,
+    'Pontuação': pontuacoes.round(2),
+    'Profissão': np.random.choice(profissoes, size=20),
+    'Estado Civil': np.random.choice(estado_civil, size=20)
+})
+
+# Exibindo as primeiras 10 linhas
+print(df.head(10))
+
+# ===============================
+# Agrupamento
+# ===============================
+
+salario_por_profissao_estado_civil = (
+    df.groupby(['Profissão', 'Estado Civil'])['Salário']
+      .mean()
+      .reset_index()
+)
+
+# ===============================
+# Gráfico Treemap
+# ===============================
+
+fig = px.treemap(
+    salario_por_profissao_estado_civil,
+    path=['Profissão', 'Estado Civil'],
+    values='Salário',
+    title='Salários por Profissão e Estado Civil',
+    color='Estado Civil'
+)
+
+# Exibindo o gráfico
+fig.show()
