@@ -1,0 +1,49 @@
+import pandas as pd
+import numpy as np
+import plotly.express as px
+
+# Gerando os dados
+idades = np.random.randint(20, 60, 20)
+salarios = idades * np.random.randint(80, 120, 20)
+pontuacoes = salarios * np.random.uniform(0.5, 1.5, 20)
+
+profissoes = [
+    'Engenheiro', 'Professor', 'Médico', 'Advogado',
+    'Designer', 'Analista', 'Gerente', 'Programador'
+]
+
+estado_civil = ['Casado', 'Solteiro']
+
+# Criando o DataFrame
+df = pd.DataFrame({
+    'Idade': idades,
+    'Salário': salarios,
+    'Pontuação': pontuacoes.round(2),
+    'Profissão': np.random.choice(profissoes, size=20),
+    'Estado Civil': np.random.choice(estado_civil, size=20)
+})
+
+# Visualizando os primeiros dados
+df.head(10)
+
+# Agrupando os dados por profissão
+salario_por_profissao = (
+    df.groupby('Profissão')['Salário']
+      .mean()
+      .reset_index()
+)
+
+# Criando o gráfico com Plotly
+fig = px.bar(
+    salario_por_profissao,
+    x='Salário',
+    y='Profissão',
+    orientation='h',
+    title='Salário Médio por Profissão',
+    labels={
+        'Salário': 'Salário Médio',
+        'Profissão': 'Profissão'
+    }
+)
+
+fig.show()
