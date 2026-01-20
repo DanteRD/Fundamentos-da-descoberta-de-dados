@@ -1,0 +1,106 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt  # Biblioteca para criação de gráficos
+
+# ===============================
+# Criando nosso DataFrame
+# ===============================
+
+# Gerando 20 idades aleatórias entre 20 e 90 anos
+idades = np.random.randint(20, 90, 20)
+
+# Gerando salários relacionados à idade
+# (idade multiplicada por um valor aleatório entre 40 e 80)
+salarios = idades * np.random.randint(40, 80, 20)
+
+# Gerando pontuações relacionadas ao salário
+# Usamos números decimais entre 0.5 e 1.5
+pontuacoes = salarios * np.random.uniform(0.5, 1.5, 20)
+
+# Lista de profissões possíveis
+profissoes = [
+    'Engenheiro', 'Professor', 'Médico', 'Advogado',
+    'Designer', 'Analista', 'Gerente', 'Programador'
+]
+
+# ===============================
+# Criando o DataFrame
+# ===============================
+
+novo_data = {
+    'Idade': idades,                     # Coluna de idades
+    'Salário': salarios,                 # Coluna de salários
+    'Pontuação': pontuacoes.round(2)     # Pontuação arredondada para 2 casas decimais
+}
+
+# Criando o DataFrame a partir do dicionário
+df = pd.DataFrame(novo_data)
+
+# Adicionando uma coluna de profissões aleatórias
+df['Profissão'] = np.random.choice(profissoes, size=len(df))
+
+# Exibindo as primeiras 10 linhas do DataFrame
+print(df.head(10))
+
+# ===============================
+# Cálculo das médias
+# ===============================
+
+# Média do salário por idade
+media_salario_por_idade = df.groupby('Idade')['Salário'].mean().sort_index()
+
+# Média da pontuação (score) por idade
+media_score_por_idade = df.groupby('Idade')['Pontuação'].mean().sort_index()
+
+# ===============================
+# Criando o gráfico
+# ===============================
+
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# Gráfico de linha - média do score por idade
+ax1.plot(
+    media_score_por_idade.index,
+    media_score_por_idade.values,
+    marker='o',
+    color='red',
+    label='Média do Score'
+)
+ax1.set_xlabel('Idade', fontsize=12)
+ax1.set_ylabel('Média do Score', color='red', fontsize=12)
+ax1.tick_params(axis='y', labelcolor='red')
+
+# Segundo eixo y
+ax2 = ax1.twinx()
+
+# Gráfico de barras - média do salário por idade
+ax2.bar(
+    media_salario_por_idade.index,
+    media_salario_por_idade.values,
+    alpha=0.5,
+    label='Média do Salário'
+)
+ax2.set_ylabel('Média do Salário', color='blue', fontsize=12)
+ax2.tick_params(axis='y', labelcolor='blue')
+
+# ===============================
+# Legenda
+# ===============================
+
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax1.legend(
+    lines1 + lines2,
+    labels1 + labels2,
+    loc='upper right',
+    bbox_to_anchor=(1.2, 1.2)
+)
+
+# ===============================
+# Finalização
+# ===============================
+
+plt.title('Média do Score e Média do Salário por Idade', fontsize=16)
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
