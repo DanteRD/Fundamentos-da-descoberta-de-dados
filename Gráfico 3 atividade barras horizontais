@@ -1,0 +1,24 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# DataFrame
+data = {
+    'Nome': ['Alice', 'Joao', 'Charlie', 'David', 'Eva', 'Diego', 'Denize', 'Claudio'],
+    'Idade': [25, 30, 35, 40, 45, 60, 22, 24],
+    'Profissão': ['Engenheiro', 'Médico', 'Professor', 'Advogado', 'Médico','Engenheiro', 'Estudante','Estudante'],
+    'Salário': ['4500', '8000', '5000', '10000', '12000','15000', '1200','1500'],
+    'Limite_Credito': ['2500', '4000', '4000', '1000', '10000','2000', '500','250']
+}
+
+df = pd.DataFrame(data)
+
+# Convertendo para numérico
+df['Limite_Credito'] = df['Limite_Credito'].astype(int)
+
+# Gráfico de barras horizontais
+plt.figure(figsize=(8,5))
+plt.barh(df['Nome'], df['Limite_Credito'])
+plt.xlabel('Limite de Crédito')
+plt.ylabel('Pessoa')
+plt.title('Limite de Crédito por Pessoa')
+plt.show()
